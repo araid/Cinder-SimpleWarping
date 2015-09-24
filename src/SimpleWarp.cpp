@@ -57,7 +57,7 @@ void SimpleWarp::setupShader()
     
     mShader->uniform("uTex0", 0);
     
-    auto r = geom::Rect(Rectf(vec2(0), vec2(1))); //.texCoords(vec2(0, 0), vec2(1, 0), vec2(1, 1), vec2(0, 1));
+    auto r = geom::Rect(Rectf(vec2(0), vec2(1))).texCoords(vec2(0, 0), vec2(1, 0), vec2(1, 1), vec2(0, 1));
     mBatch = gl::Batch::create(r, mShader);
 }
 
@@ -160,20 +160,9 @@ void SimpleWarp::draw()
 
 void SimpleWarp::calculate()
 {
-    vec2 s[4];
-    vec2 d[4];
-    
-    for (int i = 0; i < 4; i++) {
-        s[i] = mSrc[i] * mSize;
-        d[i] = mDst[i] * mSize;
-        s[i].y = mSize.y - s[i].y;
-        d[i].y = mSize.y - d[i].y;
-    }
-
-    mTransform = getQuadToQuad(s[0], s[1], s[2], s[3], d[0], d[1], d[2], d[3]);
+    mTransform = getQuadToQuad(mSrc[0] * mSize, mSrc[1] * mSize, mSrc[2] * mSize, mSrc[3] * mSize,
+                               mDst[0] * mSize, mDst[1] * mSize, mDst[2] * mSize, mDst[3] * mSize);
 }
-
-#pragma mark Matrix Operations
 
 glm::vec2 SimpleWarp::transform(const vec2 &p)
 {
